@@ -2,12 +2,6 @@ fn main() {
     //println!("{:?}",parse_calibration_val_by_char(get_file_string("test.txt")));
     // println!("{:?}",locate_calibration_value(get_file_string("mini_test.txt")));
     let string_list:Vec<&str>  = vec![
-<<<<<<< HEAD
-        "zero",        "one",        "two",        "three",        "four",
-        "five",        "six",        "seven",        "eight",        "nine",
-    ];
-    
-=======
         "zero",
         "one",
         "two",
@@ -20,17 +14,11 @@ fn main() {
         "nine",
         
     ];
->>>>>>> Reversered-Sequence
     let mut building_int: HashMap<u8, Vec<char>> = HashMap::new();
     let mut rev_building_init: HashMap<u8, Vec<char>> = HashMap::new();
 
     let mut unique_letters: HashMap<u8, HashSet<char>> = HashMap::new(); 
-<<<<<<< HEAD
-    let mut rev_unique_letters: HashMap<u8, HashSet<char>> = HashMap::new(); 
-    
-=======
     let mut rev_unique_letters: HashMap<u8, HashSet<char>> = HashMap::new();  //how to use box?
->>>>>>> Reversered-Sequence
 
     init_int_builder(&string_list,&mut building_int);
     rev_init_int_builder(&string_list,&mut rev_building_init);
@@ -39,11 +27,7 @@ fn main() {
     rev_saturate_unique_word_hashset(&string_list,&mut rev_unique_letters);
 
 
-<<<<<<< HEAD
-    dbg!(unique_letters);D
-=======
     dbg!(unique_letters);
->>>>>>> Reversered-Sequence
     dbg!(rev_unique_letters);
 
 }

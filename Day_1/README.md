@@ -11,25 +11,20 @@ The catch is the numbers can be as "one" or "1" and I thought why not try and do
 
 #### Could I do this O(N)
 
-![Unique Word Set](Word_Set.png)
-
-Essentially these are all the terms that I'll have to try and find in the jumbled mess that is the input file.
-
-#### SETS!
-
-![Unique Letters Highlighted](Unique_highlighted.png)
-
-Considering you need to find the first and the last number, why not just search from the back once you've found the first.
+Essentially these are all the terms that I'll have to try and find in the jumbled mess that is the input file.Considering you need to find the first and the last number, why not just search from the back once you've found the first.
 I thought would be as simple as reversing the intitial list but due to the mismatch of repeating characters the sets turn out different.
+
+|![Unique Word Set](Word_Set.png) | ![Unique Letters Highlighted](Unique_highlighted.png) |   |
+|----------------------------------------------------|---------------------------------------------------------------|---|
+
+#### SETS
 
 ![Unique Letters Isolated](Unique_letter_sets.png)
 
 This is what you're left with when you remove the duplicates
 
-![Unique Letters Tabulated](Unique_letter_sets_tabulated.png)
-
 And there you have it.
-
+![Unique Letters Tabulated](Unique_letter_sets_tabulated.png) 
 ```rust
 let string_list:Vec<&str>  = vec![
         "zero",        "one",        "two",        "three",        "four",
