@@ -1,6 +1,6 @@
 fn main() {
     //println!("{:?}",parse_calibration_val_by_char(get_file_string("test.txt")));
-    println!("{:?}",locate_calibration_value(get_file_string("test.txt")));
+    println!("{:?}",locate_calibration_value(get_file_string("mini_test.txt")));
 }
 
 use std::borrow::{Borrow, BorrowMut};
@@ -99,7 +99,7 @@ fn init_uniue_letters (building_int:&Vec<&str>) -> HashMap<u8, HashSet<char>> {
 
         }
     }
-    // dbg!(&unique_letters);
+    dbg!(&unique_letters);
     return unique_letters
 }
 
@@ -191,42 +191,53 @@ fn locate_calibration_value(raw_sypher:Vec<String>) -> i32{
     
     let mut sums: Vec<i32> = Vec::new();
     let mut total: i32 = 0;
-
+    
     const INDEX_MIN:u8 = 48;  //  0
     const INDEX_MAX:u8 = 57;  //  9
-
+    
     let  mut s_att_word_counter: usize = 0; 
     let mut attempted_word: Vec<char> = vec![];
-
+    
 
     for (index, each_line) in raw_sypher.iter().enumerate(){
-        for each_char in each_line.chars(){
+        
+        attempted_word.clear();
+        s_att_word_counter = 0;
+        for (sub_dex, each_char) in each_line.chars().enumerate(){
             match each_char as u8
             {
+                INDEX_MIN..=INDEX_MAX=> {
+                    //dbg!(each_char);
+                    let new_val_1 = (each_char as u8 - INDEX_MIN)as u32;
+                    // dbg!((each_char, new_val_1));
+                    keys_hash.insert(1,new_val_1);
+                    keys_hash.insert(2,new_val_1);
+                    // print!("[{}] \t {}:", index, new_val_1);
+                    s_att_word_counter = 0;
+                    attempted_word.clear();
+                    break;
+                },   
                 
                 b'a'..=b'z' => 
                 {    
                     //attempt word
-                        // this is based on static count which tracks which set to be referencing\
+                    // this is based on static count which tracks which set to be referencing\
                     let temp_allocation:HashSet<char> = HashSet::new(); //%%% Need to figure out a better method
                     let current_subset: &HashSet<char> = unique_letters.get(&(s_att_word_counter as u8)).unwrap_or(&temp_allocation);
                     if current_subset.contains(&each_char){
                         s_att_word_counter+=1;
                         attempted_word.push(each_char);
-                        
-                    }else {
-                        attempted_word.clear();
-                        s_att_word_counter = 0;
+                        // println!("newchar added: {}", each_char);
                     }
                     let attempted_word_check:String = attempted_word.iter().collect();
-                        // dbg!(s_att_word_counter);
-                        // dbg!(&attempted_word_check);
-                        if stringList.contains(&attempted_word_check.as_str())
-                        {
+                    // dbg!(s_att_word_counter);
+                    // dbg!(&attempted_word_check);
+                    if stringList.contains(&attempted_word_check.as_str())
+                    {
                             let new_val_1 = word_to_int(&attempted_word_check);
                             keys_hash.insert(1,new_val_1);
                             keys_hash.insert(2,new_val_1);
-                            print!("[{}] \t{} {}:", index, attempted_word_check,new_val_1);
+                            // print!("[{}] \t{} {}:", index, attempted_word_check,new_val_1);
                             // if let Ok(ii) = attempted_word_check.clone().trim().parse::<u32>(){
                             //     dbg!(ii);
                             //     // println!("{}",ii)
@@ -239,26 +250,25 @@ fn locate_calibration_value(raw_sypher:Vec<String>) -> i32{
                             // // let test: i32= attempted_word_check.trim().parse().expect("Que?");
                             // // dbg!(test);
                             // //keys_hash.insert(1,test);
+                            attempted_word.clear();
+                            s_att_word_counter = 0;
                             break;
-                        }
+                    }
+                    if !current_subset.contains(&each_char) {
+                        attempted_word.clear();
+                        s_att_word_counter = 0;
+                    }
                     //todo!()
                 },
-                INDEX_MIN..=INDEX_MAX=> {
-                    //dbg!(each_char);
-                    let new_val_1 = (each_char as u8 - INDEX_MIN)as u32;
-                    // dbg!((each_char, new_val_1));
-                    keys_hash.insert(1,new_val_1);
-                    keys_hash.insert(2,new_val_1);
-                    print!("[{}] \t {}:", index, new_val_1);
-                    break;
-                },    
+                 
                 _ => {
                     
                 }
             }
         }
-        println!("{:?}\n",each_line);
-        
+        attempted_word.clear();
+        s_att_word_counter = 0;
+        // println!("{:?}\n",each_line);
         for each_char in each_line.chars(){
             // dbg!(each_char);
             // match each_char as u8
@@ -280,6 +290,16 @@ fn locate_calibration_value(raw_sypher:Vec<String>) -> i32{
             match each_char as u8
             {
                 
+                INDEX_MIN..=INDEX_MAX=> {
+                    //dbg!(each_char);
+                    let new_val_2 = (each_char as u8 - INDEX_MIN)as u32;
+                    //dbg!(new_val_2);
+                    keys_hash.insert(2,new_val_2);
+                    attempted_word.clear();
+                    s_att_word_counter = 0;
+                    
+                },
+                
                 b'a'..=b'z' => 
                 {    
                     //attempt word
@@ -290,9 +310,6 @@ fn locate_calibration_value(raw_sypher:Vec<String>) -> i32{
                         s_att_word_counter+=1;
                         attempted_word.push(each_char);
                         
-                    }else {
-                        attempted_word.clear();
-                        s_att_word_counter = 0;
                     }
                     let attempted_word_check:String = attempted_word.iter().collect();
                         // dbg!(s_att_word_counter);
@@ -317,21 +334,42 @@ fn locate_calibration_value(raw_sypher:Vec<String>) -> i32{
                         // // dbg!(test);
                         // //keys_hash.insert(1,test);
                     }
+                    if ! current_subset.contains(&each_char){
+                        attempted_word.clear();
+                        s_att_word_counter = 0;
+                    }
                     //todo!()
                 },    
-                INDEX_MIN..=INDEX_MAX=> {
-                    //dbg!(each_char);
-                    let new_val_2 = (each_char as u8 - INDEX_MIN)as u32;
-                    //dbg!(new_val_2);
-                    keys_hash.insert(2,new_val_2);
-                    
-                    
-                },
+                
                 _ => {
                     
                 }
             }
         }
+        
+        let attempted_word_check:String = attempted_word.iter().collect();
+        // dbg!(s_att_word_counter);
+        // dbg!(&attempted_word_check);
+        if stringList.contains(&attempted_word_check.as_str())
+        {
+                let new_val_1 = word_to_int(&attempted_word_check);
+                keys_hash.insert(2,new_val_1);
+                // print!("[{}] \t{} {}:", index, attempted_word_check,new_val_1);
+                // if let Ok(ii) = attempted_word_check.clone().trim().parse::<u32>(){
+                //     dbg!(ii);
+                //     // println!("{}",ii)
+                // }
+                // else {
+                //     dbg!(&attempted_word_check);
+                // }
+                // // println!("new word: {:?} at [{}]",attempted_word_check,s_att_word_counter);
+                // // dbg!(&attempted_word_check);
+                // // let test: i32= attempted_word_check.trim().parse().expect("Que?");
+                // // dbg!(test);
+                // //keys_hash.insert(1,test);
+            
+        }
+        
         let first = keys_hash.get(&1).cloned().unwrap_or_default();
         let mut second = keys_hash.get(&2).cloned().unwrap_or_default();
         if first == 0 {
@@ -340,11 +378,12 @@ fn locate_calibration_value(raw_sypher:Vec<String>) -> i32{
         else {
             // dbg!((10*first + second));
             let addition = (10*first + second)as i32;
+            println!("[{:4.}] {:1.} : {:1.} ={} #[{:?}]",index,first ,second ,addition,each_line);
             // dbg!(first, second, addition);
             sums.push(addition);
         }
-        
-        
+        keys_hash.insert(1, 0);
+        keys_hash.insert(2, 0);
     }
 
     for sum in sums
