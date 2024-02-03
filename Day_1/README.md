@@ -14,8 +14,8 @@ The catch is the numbers can be as "one" or "1" and I thought why not try and do
 Essentially these are all the terms that I'll have to try and find in the jumbled mess that is the input file.Considering you need to find the first and the last number, why not just search from the back once you've found the first.
 I thought would be as simple as reversing the intitial list but due to the mismatch of repeating characters the sets turn out different.
 
-|![Unique Word Set](Word_Set.png) | ![Unique Letters Highlighted](Unique_highlighted.png) |   |
-|----------------------------------------------------|---------------------------------------------------------------|---|
+|![Unique Word Set](Word_Set.png) | ![Unique Letters Highlighted](Unique_highlighted.png) |
+|----------------------------------------------------|---------------------------------------------------------------|
 
 #### SETS
 
@@ -24,7 +24,9 @@ I thought would be as simple as reversing the intitial list but due to the misma
 This is what you're left with when you remove the duplicates
 
 And there you have it.
-![Unique Letters Tabulated](Unique_letter_sets_tabulated.png) 
+
+![Unique Letters Tabulated](Unique_letter_sets_tabulated.png)
+
 ```rust
 let string_list:Vec<&str>  = vec![
         "zero",        "one",        "two",        "three",        "four",
