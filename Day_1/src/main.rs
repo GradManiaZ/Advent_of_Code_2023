@@ -2,16 +2,35 @@ fn main() {
     //println!("{:?}",parse_calibration_val_by_char(get_file_string("test.txt")));
     // println!("{:?}",locate_calibration_value(get_file_string("mini_test.txt")));
     let string_list:Vec<&str>  = vec![
+<<<<<<< HEAD
         "zero",        "one",        "two",        "three",        "four",
         "five",        "six",        "seven",        "eight",        "nine",
     ];
     
+=======
+        "zero",
+        "one",
+        "two",
+        "three",
+        "four",
+        "five",
+        "six",
+        "seven",
+        "eight",
+        "nine",
+        
+    ];
+>>>>>>> Reversered-Sequence
     let mut building_int: HashMap<u8, Vec<char>> = HashMap::new();
     let mut rev_building_init: HashMap<u8, Vec<char>> = HashMap::new();
 
     let mut unique_letters: HashMap<u8, HashSet<char>> = HashMap::new(); 
+<<<<<<< HEAD
     let mut rev_unique_letters: HashMap<u8, HashSet<char>> = HashMap::new(); 
     
+=======
+    let mut rev_unique_letters: HashMap<u8, HashSet<char>> = HashMap::new();  //how to use box?
+>>>>>>> Reversered-Sequence
 
     init_int_builder(&string_list,&mut building_int);
     rev_init_int_builder(&string_list,&mut rev_building_init);
@@ -20,7 +39,11 @@ fn main() {
     rev_saturate_unique_word_hashset(&string_list,&mut rev_unique_letters);
 
 
+<<<<<<< HEAD
     dbg!(unique_letters);D
+=======
+    dbg!(unique_letters);
+>>>>>>> Reversered-Sequence
     dbg!(rev_unique_letters);
 
 }
@@ -67,65 +90,91 @@ fn get_file_string(file_name: &str) -> Vec<String>{
         file_contents
 }
 
-fn init_int_builder (building_int:&mut HashMap<u8,Vec<char>>) -> Vec<&str>{
-    let string_list:Vec<&str>  = vec![
-        "zero",
-        "one",
-        "two",
-        "three",
-        "four",
-        "five",
-        "six",
-        "seven",
-        "eight",
-        "nine",
-        
-    ];
+fn init_int_builder (string_list:&Vec<&str>,building_int:&mut HashMap<u8,Vec<char>>){
+    
+    
     for (index, each_string) in string_list.clone().into_iter().enumerate()
     {
-        building_int.insert(1, each_string.chars().collect()); //one
+        
+        building_int.insert(index as u8, each_string.chars().collect()); //one
     }
-    string_list
+}
+fn rev_init_int_builder (string_list:&Vec<&str>,rev_building_int:&mut HashMap<u8,Vec<char>>){
+   
+    for (index , each_string) in string_list.clone().into_iter().enumerate().rev()
+    {
+        
+        rev_building_int.insert(index as u8, each_string.chars().rev().collect()); //one
+    }
 }
 
-fn init_uniue_letters (building_int:&Vec<&str>) -> HashMap<u8, HashSet<char>> {
-    // Hashmap<index, HashSet<char>>
+fn initialise_map_set_sub_series(len:u8) -> HashMap<u8, HashSet<char>>{
     let mut unique_letters: HashMap<u8, HashSet<char>> = HashMap::new();
-    let mut max_word_length:u8 = 0;
+    for ii in 0..len
+    {
+        let new_hash:HashSet<char> = HashSet::new();
+        unique_letters.insert(ii, new_hash.clone());
+    }
+    unique_letters
+}
+
+fn saturate_unique_word_hashset(building_int:&Vec<&str>, unique_letters: &mut HashMap<u8, HashSet<char>>){
+    for word_chars in building_int
+    {
+        // dbg!(String::from(*unique_word_chars));
+        for (position, letter) in word_chars.chars().enumerate()
+        {
+            //first check if there is a hashset for this position [{"O"},"N","E"] => index 0
+            let mut new_hash:HashSet<&char> =  HashSet::new();
+            unique_letters.entry(position as u8).or_insert_with(|| HashSet::new()).insert(letter);
+        }
+    }
+}
+fn rev_saturate_unique_word_hashset(building_int:&Vec<&str>, unique_letters: &mut HashMap<u8, HashSet<char>>){
+    for word_chars in building_int
+    {
+        // dbg!(String::from(*unique_word_chars));
+        for (position, letter) in word_chars.chars().rev().enumerate()
+        {
+            //first check if there is a hashset for this position [{"O"},"N","E"] => index 0
+            let mut new_hash:HashSet<&char> =  HashSet::new();
+            unique_letters.entry(position as u8).or_insert_with(|| HashSet::new()).insert(letter);
+        }
+    }
+}
 
 
+
+fn init_unique_letters (building_int:&Vec<&str>) -> (HashMap<u8, HashSet<char>>,HashMap<u8, HashSet<char>>) {
+    // Hashmap<index, HashSet<char>>
+    //  Assumption is that it'll fail long before it gets here if somethign is wrong with the text.
+    let max_word_length:u8 = get_max_word_length(building_int);
+
+    let mut unique_letters: HashMap<u8, HashSet<char>> = initialise_map_set_sub_series(max_word_length); 
+    let mut rev_unique_letters: HashMap<u8, HashSet<char>> = initialise_map_set_sub_series(max_word_length); //how to use box?
+    // dbg!(max_word_length);
+
+    
+    saturate_unique_word_hashset(&building_int, &mut unique_letters);
+
+
+    // dbg!(&unique_letters);
+    return (unique_letters, rev_unique_letters)
+}
+fn get_max_word_length(building_int:&Vec<&str>) -> u8
+{ 
+    let mut max_word_length = 0;
     for word in building_int
     {
         if word.len() as u8 > max_word_length{
             max_word_length = word.len() as u8;
         }
     }
-    // dbg!(max_word_length);
-
-    for ii in 0..max_word_length
-    {
-        let new_hash:HashSet<char> = HashSet::new();
-        unique_letters.insert(ii, new_hash.clone());
-    }
-
-    for unique_word_chars in building_int
-    {
-        // dbg!(String::from(*unique_word_chars));
-        for (position, letter) in unique_word_chars.chars().enumerate()
-        {
-            //first check if there is a hashset for this position [{"O"},"N","E"] => index 0
-            let mut new_hash:HashSet<&char> =  HashSet::new();
-            let mut current_set = unique_letters.entry(position as u8).or_insert_with(|| HashSet::new());
-
-            current_set.insert(letter);
-
-        }
-    }
-    dbg!(&unique_letters);
-    return unique_letters
+    max_word_length
 }
 
 
+/*
 fn parse_calibration_val_by_char(raw_sypher:Vec<String>) -> i32{
     let mut keys_hash: HashMap<u8, u32> = HashMap::new();
     
@@ -198,7 +247,9 @@ fn parse_calibration_val_by_char(raw_sypher:Vec<String>) -> i32{
     }
     total
 }
-fn locate_calibration_value(raw_sypher:Vec<String>) -> i32{
+*/
+
+fn locate_calibration_value(string_list:Vec<&str>, raw_sypher:Vec<String>) -> i32{
 
     let mut keys_hash: HashMap<u8, u32> = HashMap::new();
     
@@ -206,9 +257,10 @@ fn locate_calibration_value(raw_sypher:Vec<String>) -> i32{
     keys_hash.insert(2, 0);
     
     let mut building_int: HashMap<u8, Vec<char>> = HashMap::new().to_owned();
-    let stringList: Vec<&str> = init_int_builder(&mut building_int);
+    
+    init_int_builder(&string_list,&mut building_int);
 
-    let unique_letters = init_uniue_letters(&stringList);
+    let (unique_letters,_) = init_unique_letters(&string_list);
     
     
     let mut sums: Vec<i32> = Vec::new();
@@ -254,7 +306,7 @@ fn locate_calibration_value(raw_sypher:Vec<String>) -> i32{
                     let attempted_word_check:String = attempted_word.iter().collect();
                     // dbg!(s_att_word_counter);
                     // dbg!(&attempted_word_check);
-                    if stringList.contains(&attempted_word_check.as_str())
+                    if string_list.contains(&attempted_word_check.as_str())
                     {
                             let new_val_1 = word_to_int(&attempted_word_check);
                             keys_hash.insert(1,new_val_1);
@@ -337,7 +389,7 @@ fn locate_calibration_value(raw_sypher:Vec<String>) -> i32{
                         // dbg!(s_att_word_counter);
                         // dbg!(&attempted_word_check);
                         // dbg!(&attempted_word_check);
-                    if stringList.contains(&attempted_word_check.as_str())
+                    if string_list.contains(&attempted_word_check.as_str())
                     {
                         let new_val_2 = word_to_int(&attempted_word_check);
                         // dbg!(new_val_2);
@@ -372,7 +424,7 @@ fn locate_calibration_value(raw_sypher:Vec<String>) -> i32{
         let attempted_word_check:String = attempted_word.iter().collect();
         // dbg!(s_att_word_counter);
         // dbg!(&attempted_word_check);
-        if stringList.contains(&attempted_word_check.as_str())
+        if string_list.contains(&attempted_word_check.as_str())
         {
                 let new_val_1 = word_to_int(&attempted_word_check);
                 keys_hash.insert(2,new_val_1);
@@ -416,6 +468,8 @@ fn locate_calibration_value(raw_sypher:Vec<String>) -> i32{
     
 
 }
+
+
 fn word_to_int(validated_string :&String) -> u32
 {
     match validated_string.as_str(){
