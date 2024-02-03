@@ -1,6 +1,28 @@
 fn main() {
     //println!("{:?}",parse_calibration_val_by_char(get_file_string("test.txt")));
-    println!("{:?}",locate_calibration_value(get_file_string("mini_test.txt")));
+    // println!("{:?}",locate_calibration_value(get_file_string("mini_test.txt")));
+    let string_list:Vec<&str>  = vec![
+        "zero",        "one",        "two",        "three",        "four",
+        "five",        "six",        "seven",        "eight",        "nine",
+    ];
+    
+    let mut building_int: HashMap<u8, Vec<char>> = HashMap::new();
+    let mut rev_building_init: HashMap<u8, Vec<char>> = HashMap::new();
+
+    let mut unique_letters: HashMap<u8, HashSet<char>> = HashMap::new(); 
+    let mut rev_unique_letters: HashMap<u8, HashSet<char>> = HashMap::new(); 
+    
+
+    init_int_builder(&string_list,&mut building_int);
+    rev_init_int_builder(&string_list,&mut rev_building_init);
+
+    saturate_unique_word_hashset(&string_list,&mut unique_letters);
+    rev_saturate_unique_word_hashset(&string_list,&mut rev_unique_letters);
+
+
+    dbg!(unique_letters);D
+    dbg!(rev_unique_letters);
+
 }
 
 use std::borrow::{Borrow, BorrowMut};
