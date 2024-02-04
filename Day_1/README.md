@@ -2,8 +2,9 @@
 
 ## Day 1
 
-"Elves have forgotten their encryption key! You need to find the first and last number in each line then sum the total"
-The catch is the numbers can be as "one" or "1" and I thought why not try and do it in a linear fashion.
+"Elves have forgotten their encryption key! Given a list of giberish find the first and last number in each line then sum the total".
+
+*The catch is the numbers can be as "one" or "1" and I thought why not try and do it in a linear fashion.
 
 ![Parserer Diagram and Spec Breakdown](ParserDiagram.webp)
 
